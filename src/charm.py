@@ -129,10 +129,10 @@ class JellyfinCharm(CharmBase):
 
         def _command():
             return (
-                f"/jellyfin/jellyfin "
-                f"--datadir=/config "
-                f"--cachedir=/cache "
-                f"--ffmpeg=/usr/lib/jellyfin-ffmpeg/ffmpeg"
+                "/jellyfin/jellyfin "
+                "--datadir=/config "
+                "--cachedir=/cache "
+                "--ffmpeg=/usr/lib/jellyfin-ffmpeg/ffmpeg"
             )
 
         return Layer(
@@ -188,7 +188,6 @@ class JellyfinCharm(CharmBase):
         Adding this hook reduce the likelihood of that scenario.
         """
         self._common_exit_hook()
-
 
     def _restart_service(self) -> bool:
         """Helper function for restarting the underlying service."""

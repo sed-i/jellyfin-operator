@@ -6,12 +6,12 @@ import unittest
 from ops.model import ActiveStatus
 from ops.testing import Harness
 
-from charm import AvalancheCharm
+from charm import JellyfinCharm
 
 
 class TestCharm(unittest.TestCase):
     def setUp(self):
-        self.harness = Harness(AvalancheCharm)
+        self.harness = Harness(JellyfinCharm)
         self.addCleanup(self.harness.cleanup)
         self.harness.begin()
 
