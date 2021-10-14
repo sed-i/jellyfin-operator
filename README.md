@@ -1,49 +1,40 @@
-# Avalanche Operator (k8s)
+# Jellyfin Operator (k8s)
 
 ## Description
 
-[Avalanche][Avalanche source] is an [OpenMetrics][OpenMetrics source] endpoint
-load tester.
+[Jellyfin][Jellyfin source] is a media system for streaming to any device from 
+your own server.
 
 ## Usage
 
-To use Avalanche, you need to be able to relate to a charm that supports the
-`prometheus_scrape` relation interface.
-
-For more information see [INTEGRATING](INTEGRATING.md).
-
-You also need to have a working Kubernetes environment, and have bootstrapped a
+To use Jellyfin, need to have a working Kubernetes environment, and have bootstrapped a
 Juju controller of version 2.9+, with a model ready to use with the Kubernetes
 cloud.
 
 Example deployment:
 
 ```shell
-juju deploy avalanche-k8s
-```
-
-Then you could relate to [prometheus][Prometheus operator]:
-```shell
-juju deploy prometheus-k8s
-juju relate prometheus-k8s avalanche-k8s
+charmcraft pack
+juju deploy ./jellyfin-k8s_ubuntu-20.04-amd64.charm jellyfin --resource jellyfin-image=jellyfin/jellyfin:unstable
+juju deploy nginx-ingress-integrator ingress
+juju relate jellyfin ingress
 ```
 
 ### Scale Out Usage
-To add additional Avalanche units for high availability,
+To add additional Jellyfin units for high availability,
 
 ```shell
-juju add-unit avalanche-k8s
+juju add-unit jellyfin-k8s
 ```
 
 ## Relations
 Currently, supported relations are:
-- `metrics-endpoint`, for interfacing with [prometheus][Prometheus operator].
+- `ingress`, for interfacing with [nginx-ingress-integrator][nginx-ingress-integrator operator].
 
 ## OCI Images
 This charm can be used with the following image:
-- `quay.io/freshtracks.io/avalanche`
+- `jellyfin/jellyfin:unstable`
 
 
-[Avalanche source]: https://github.com/open-fresh/avalanche
-[OpenMetrics source]: https://github.com/OpenObservability/OpenMetrics
-[Prometheus operator]: https://charmhub.io/prometheus-k8s
+[Jellyfin source]: https://github.com/jellyfin/jellyfin
+[nginx-ingress-integrator operator]: https://charmhub.io/nginx-ingress-integrator
