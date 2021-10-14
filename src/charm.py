@@ -6,6 +6,7 @@
 import hashlib
 import logging
 
+from charms.nginx_ingress_integrator.v0.ingress import IngressRequires
 from ops.charm import CharmBase
 from ops.framework import StoredState
 from ops.main import main
@@ -47,6 +48,16 @@ class JellyfinCharm(CharmBase):
         self.framework.observe(self.on.jellyfin_pebble_ready, self._on_pebble_ready)
         self.framework.observe(self.on.start, self._on_start)
         self.framework.observe(self.on.update_status, self._on_update_status)
+
+        self.service_hostname = self._external_hostname
+        self.ingress = IngressRequires(
+            self,
+            {
+                "service-hostname": self.service_hostname,
+                "service-name": self.app.name,
+                "service-port": self.port,
+            },
+        )
 
     def _common_exit_hook(self) -> None:
         """Event processing hook that is common to all events to ensure idempotency."""
@@ -99,6 +110,14 @@ class JellyfinCharm(CharmBase):
             self._restart_service()
 
         return is_changed
+
+    @property
+    def _external_hostname(self):
+        """Return the external hostname to be passed to ingress via the relation."""
+        # It is recommended to default to `self.app.name` so that the external
+        # hostname will correspond to the deployed application name in the
+        # model, but allow it to be set to something specific via config.
+        return self.config.get("external_hostname", self.app.name)
 
     @property
     def port(self):
@@ -170,9 +189,6 @@ class JellyfinCharm(CharmBase):
         """
         self._common_exit_hook()
 
-    def _on_alertmanager_config_changed(self, _):
-        """Event handler for :class:`JellyfinAlertmanagerConfigChanged`."""
-        self._common_exit_hook()
 
     def _restart_service(self) -> bool:
         """Helper function for restarting the underlying service."""

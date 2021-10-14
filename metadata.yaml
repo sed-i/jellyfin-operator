@@ -17,9 +17,9 @@ resources:
     description: OCI image for jellyfin
     upstream-source: jellyfin/jellyfin:unstable
 
-provides:
-  metrics-endpoint:
-    interface: prometheus_scrape
+requires:
+  ingress:
+    interface: ingress
 
 peers:
   replicas:

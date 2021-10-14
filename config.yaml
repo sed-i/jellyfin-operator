@@ -1,0 +1,10 @@
+# Copyright 2021 Canonical Ltd.
+# See LICENSE file for licensing details.
+
+options:
+  external_hostname:
+    default: ""
+    description: >
+      The external hostname this application should be available on. If unset,
+      it will default to the deployed application name in the model.
+    type: string
